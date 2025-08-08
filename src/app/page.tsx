@@ -33,18 +33,16 @@ export default function Home() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl">
         {tools.map((tool) => (
-          <Link href={tool.href} key={tool.href} legacyBehavior passHref>
-            <a target="_blank" className="block">
-              <Card className="h-full transform transition-transform duration-300 hover:-translate-y-2 hover:shadow-2xl flex flex-col items-center text-center">
-                <CardHeader>
-                  {tool.icon}
-                  <CardTitle className="font-headline text-2xl mt-4">{tool.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-base">{tool.description}</CardDescription>
-                </CardContent>
-              </Card>
-            </a>
+          <Link href={tool.href} key={tool.href} target="_blank" className="block">
+            <Card className="h-full transform transition-transform duration-300 hover:-translate-y-2 hover:shadow-2xl flex flex-col items-center text-center">
+              <CardHeader>
+                {tool.icon}
+                <CardTitle className="font-headline text-2xl mt-4">{tool.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-base">{tool.description}</CardDescription>
+              </CardContent>
+            </Card>
           </Link>
         ))}
       </div>
