@@ -30,16 +30,15 @@ const prompt = ai.definePrompt({
   name: 'tamilTranslatorPrompt',
   input: {schema: TamilTranslatorInputSchema},
   output: {schema: TamilTranslatorOutputSchema},
-  prompt: `You are a translation expert specializing in Tamil and other languages. Your task is to provide a high-quality, natural-sounding translation.
+  // Use the more powerful gemini-1.5-pro model for translation tasks.
+  model: 'googleai/gemini-1.5-pro-latest',
+  prompt: `You are a highly sophisticated translation engine. Your sole purpose is to provide the most accurate, professional-grade translation possible.
 
-First, identify the source language of the text. Then, translate the following text into the specified target language.
-
-Pay close attention to:
-- Preserving the original meaning and intent.
-- Using natural phrasing and correct grammar in the target language.
-- Considering cultural nuances and context to provide the most appropriate translation.
-- Handling idiomatic expressions gracefully.
-- Providing the most accurate and specific translation for all words, including technical and nuanced terms.
+- Identify the source language.
+- Translate the text to the specified target language.
+- Preserve the exact meaning, intent, and nuances.
+- Use natural phrasing and flawless grammar.
+- Handle idiomatic expressions and technical terms with extreme precision.
 
 Text to Translate:
 {{{text}}}
@@ -47,7 +46,7 @@ Text to Translate:
 Target Language:
 {{{targetLanguage}}}
 
-Provide only the translated text as the output.`,
+Provide ONLY the translated text as your response.`,
 });
 
 const tamilTranslatorFlow = ai.defineFlow(
