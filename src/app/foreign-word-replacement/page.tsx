@@ -42,15 +42,17 @@ export default function ForeignWordReplacementPage() {
   };
 
   const finalParagraph = useMemo(() => {
-    if (!result || !result.paragraph) return '';
-    let updated = result.paragraph;
+    if (!result || !paragraph) return '';
+    let updated = paragraph;
     result.replacementOptions.forEach((opt) => {
-      if (choices[opt.originalWord]) {
-        updated = updated.replace(new RegExp(opt.originalWord, 'gi'), opt.suggestedReplacement);
+      const choice = choices[opt.originalWord];
+      if (choice) {
+          const regex = new RegExp(`\\b${opt.originalWord}\\b`, 'gi');
+          updated = updated.replace(regex, opt.suggestedReplacement);
       }
     });
     return updated;
-  }, [choices, result]);
+  }, [choices, result, paragraph]);
 
   useEffect(() => {
     if (result) {
