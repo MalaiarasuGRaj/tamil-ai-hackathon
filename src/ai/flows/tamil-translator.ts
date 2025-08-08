@@ -30,12 +30,23 @@ const prompt = ai.definePrompt({
   name: 'tamilTranslatorPrompt',
   input: {schema: TamilTranslatorInputSchema},
   output: {schema: TamilTranslatorOutputSchema},
-  prompt: `You are a translation expert specializing in Tamil and other languages.
+  prompt: `You are a translation expert specializing in Tamil and other languages. Your task is to provide a high-quality, natural-sounding translation.
 
-Translate the following text into the target language, preserving the meaning with natural phrasing.
+First, identify the source language of the text. Then, translate the following text into the specified target language.
 
-Text: {{{text}}}
-Target Language: {{{targetLanguage}}}`,
+Pay close attention to:
+- Preserving the original meaning and intent.
+- Using natural phrasing and correct grammar in the target language.
+- Considering cultural nuances and context to provide the most appropriate translation.
+- Handling idiomatic expressions gracefully.
+
+Text to Translate:
+{{{text}}}
+
+Target Language:
+{{{targetLanguage}}}
+
+Provide only the translated text as the output.`,
 });
 
 const tamilTranslatorFlow = ai.defineFlow(
