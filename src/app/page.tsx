@@ -33,7 +33,7 @@ export default function Home() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl">
         {tools.map((tool) => (
-          <Link href={tool.href} key={tool.href} target="_blank" className="block">
+          <Link href={tool.href} key={tool.href} className="block">
             <Card className="h-full transform transition-transform duration-300 hover:-translate-y-2 hover:shadow-2xl flex flex-col items-center text-center">
               <CardHeader>
                 {tool.icon}
