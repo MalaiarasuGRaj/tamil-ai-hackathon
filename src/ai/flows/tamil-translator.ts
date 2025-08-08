@@ -10,6 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import {getTamilGlossaryTerm} from '@/ai/tools/glossary';
 
 const TamilTranslatorInputSchema = z.object({
   text: z.string().describe('The text to translate.'),
@@ -30,9 +31,12 @@ const prompt = ai.definePrompt({
   name: 'tamilTranslatorPrompt',
   input: {schema: TamilTranslatorInputSchema},
   output: {schema: TamilTranslatorOutputSchema},
+  tools: [getTamilGlossaryTerm],
   prompt: `You are a translation expert specializing in Tamil and other languages. Your task is to provide a high-quality, natural-sounding translation.
 
 First, identify the source language of the text. Then, translate the following text into the specified target language.
+
+For technical terms, use the getTamilGlossaryTerm tool to get the most accurate translation.
 
 Pay close attention to:
 - Preserving the original meaning and intent.
