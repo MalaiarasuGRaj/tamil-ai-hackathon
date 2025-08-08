@@ -72,8 +72,22 @@ const multipleMeaningsFinderFlow = ai.defineFlow(
     inputSchema: MultipleMeaningsFinderInputSchema,
     outputSchema: MultipleMeaningsFinderOutputSchema,
   },
-  async input => {
-    const {output} = await multipleMeaningsFinderPrompt(input);
-    return output!;
+  async (input, streamingCallback) => {
+    let retries = 3;
+    while (retries > 0) {
+      try {
+        const {output} = await multipleMeaningsFinderPrompt(input);
+        return output!;
+      } catch (e: any) {
+        if (retries > 0 && e.message?.includes('503')) {
+          console.log(`Retrying... attempts left: ${retries - 1}`);
+          await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds
+        } else {
+          throw e;
+        }
+      }
+      retries--;
+    }
+    throw new Error('Flow failed after multiple retries.');
   }
 );
