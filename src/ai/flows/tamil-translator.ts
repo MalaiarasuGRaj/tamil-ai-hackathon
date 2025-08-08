@@ -30,8 +30,8 @@ const prompt = ai.definePrompt({
   name: 'tamilTranslatorPrompt',
   input: {schema: TamilTranslatorInputSchema},
   output: {schema: TamilTranslatorOutputSchema},
-  // Use the more powerful gemini-1.5-pro model for translation tasks.
-  model: 'googleai/gemini-1.5-pro-latest',
+  // Use the more powerful gemini-1.5-flash model for translation tasks to avoid rate-limiting.
+  model: 'googleai/gemini-1.5-flash-latest',
   prompt: `You are a highly sophisticated translation engine. Your sole purpose is to provide the most accurate, professional-grade translation possible.
 
 - Identify the source language.
