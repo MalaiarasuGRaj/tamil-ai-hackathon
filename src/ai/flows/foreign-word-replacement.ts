@@ -37,7 +37,13 @@ Paragraph: {paragraph}
 Highlight the foreign words in the original text using markdown's bold syntax (**word**). Provide a list of suggested Tamil replacements for each highlighted word. Focus on maintaining the original meaning and context of the sentence.
 
 Output the result as a valid JSON object that follows this Zod schema:
-${JSON.stringify(ForeignWordReplacementOutputSchema.shape)}
+${JSON.stringify({
+  highlightedText: "string",
+  replacementOptions: [{
+    originalWord: "string",
+    suggestedReplacement: "string",
+  }]
+})}
 `;
 
 export async function foreignWordReplacement(input: ForeignWordReplacementInput): Promise<ForeignWordReplacementOutput> {
@@ -68,5 +74,13 @@ export async function foreignWordReplacement(input: ForeignWordReplacementInput)
 
   const data = await response.json();
   const jsonContent = JSON.parse(data.choices[0].message.content);
+  
+  // Filter out incomplete replacement options before parsing
+  if (jsonContent.replacementOptions && Array.isArray(jsonContent.replacementOptions)) {
+    jsonContent.replacementOptions = jsonContent.replacementOptions.filter(
+      (opt: any) => opt.originalWord && opt.suggestedReplacement
+    );
+  }
+  
   return ForeignWordReplacementOutputSchema.parse(jsonContent);
 }
