@@ -12,9 +12,15 @@ import { ArrowRightLeft, Bot, Languages } from 'lucide-react';
 
 const languages = [
   { value: 'English', label: 'ஆங்கிலம்' },
+  { value: 'Tamil', label: 'தமிழ்' },
   { value: 'Hindi', label: 'இந்தி' },
   { value: 'French', label: 'பிரெஞ்சு' },
-  { value: 'Tamil', label: 'தமிழ்' },
+  { value: 'Spanish', label: 'ஸ்பானிஷ்' },
+  { value: 'German', label: 'ஜெர்மன்' },
+  { value: 'Chinese', label: 'சீன' },
+  { value: 'Japanese', label: 'ஜப்பானிய' },
+  { value: 'Arabic', label: 'அரபு' },
+  { value: 'Russian', label: 'ரஷியன்' },
 ];
 
 export default function TranslatorPage() {
