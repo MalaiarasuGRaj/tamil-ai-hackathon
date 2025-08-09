@@ -82,7 +82,7 @@ export default function Home() {
           </DialogHeader>
           {kural && (
             <div className="text-center space-y-4">
-              <p className="font-bold text-lg text-accent">{kural.number}</p>
+              <p className="font-bold text-lg text-accent">குறள்</p>
               <div>
                 <p className="text-lg leading-relaxed">{kural.line1}</p>
                 <p className="text-lg leading-relaxed">{kural.line2}</p>
