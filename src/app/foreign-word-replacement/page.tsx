@@ -104,6 +104,14 @@ export default function ForeignWordReplacementPage() {
     }
   };
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(finalParagraph);
+    toast({
+      title: 'நகலெடுக்கப்பட்டது',
+      description: 'இறுதிப் பத்தி வெற்றிகரமாக நகலெடுக்கப்பட்டது.',
+    });
+  };
+
   return (
     <div className="container mx-auto max-w-4xl py-12 px-4">
       <div className="text-center mb-10">
@@ -200,7 +208,7 @@ export default function ForeignWordReplacementPage() {
               <p className="text-lg leading-relaxed bg-secondary/50 p-4 rounded-md">{finalParagraph}</p>
             </CardContent>
             <CardFooter>
-                <Button onClick={() => navigator.clipboard.writeText(finalParagraph)}>நகலெடு</Button>
+                <Button onClick={handleCopy}>நகலெடு</Button>
             </CardFooter>
           </Card>
         </div>
