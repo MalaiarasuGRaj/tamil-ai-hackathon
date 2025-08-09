@@ -18,7 +18,7 @@ export default function ToolsLayout({
             </Link>
           </Button>
           <h1 className="text-2xl font-headline font-bold text-primary">
-            தமிழ் AI உதவி
+            தமிழி
           </h1>
         </div>
       </header>

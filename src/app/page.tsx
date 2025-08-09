@@ -27,7 +27,7 @@ export default function Home() {
   return (
     <main className="container mx-auto flex min-h-screen flex-col items-center justify-center p-4">
       <div className="text-center mb-12">
-        <h1 className="font-headline text-5xl md:text-7xl font-bold text-primary">தமிழ் AI உதவி</h1>
+        <h1 className="font-headline text-5xl md:text-7xl font-bold text-primary">தமிழி</h1>
         <p className="mt-4 text-lg md:text-xl text-muted-foreground">Learn & Enrich Tamil Language</p>
       </div>
 
