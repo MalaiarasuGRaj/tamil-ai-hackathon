@@ -44,7 +44,7 @@ export async function translate(input: TamilTranslatorInput): Promise<TamilTrans
     .replace('{targetLanguage}', input.targetLanguage);
 
   const requestBody = {
-    model: 'google/gemini-flash-1.5',
+    model: 'google/gemini-2.0-flash-lite-001',
     messages: [
       {
         role: 'user',

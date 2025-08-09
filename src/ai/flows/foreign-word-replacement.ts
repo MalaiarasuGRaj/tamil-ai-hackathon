@@ -28,11 +28,14 @@ const ForeignWordReplacementOutputSchema = z.object({
 });
 export type ForeignWordReplacementOutput = z.infer<typeof ForeignWordReplacementOutputSchema>;
 
-const prompt = `You are an expert in the Tamil language.
+const prompt = `You are a meticulous expert in the Tamil language, specializing in identifying and replacing foreign words within Tamil text.
 
-You will be given a paragraph that may contain foreign words. Your task is to identify these words, suggest appropriate formal Tamil replacements, and return the original text with the foreign words highlighted and a list of replacement options.
+You will be given a paragraph that may contain foreign words (primarily from English). Your task is to identify ALL of these foreign words, suggest appropriate formal Tamil replacements, and return the original text with the foreign words highlighted.
 
-Paragraph: {paragraph}
+Be thorough. Identify all foreign words, even if they have Tamil suffixes (e.g., in "laptop-ஐ", the foreign word is "laptop").
+
+Paragraph:
+{paragraph}
 
 Highlight the foreign words in the original text using markdown's bold syntax (**word**). Provide a list of suggested Tamil replacements for each highlighted word. Focus on maintaining the original meaning and context of the sentence.
 
@@ -45,6 +48,7 @@ ${JSON.stringify({
   }]
 })}
 `;
+
 
 export async function foreignWordReplacement(input: ForeignWordReplacementInput): Promise<ForeignWordReplacementOutput> {
   const requestBody = {

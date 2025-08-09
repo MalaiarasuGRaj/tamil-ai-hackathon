@@ -46,7 +46,7 @@ ${JSON.stringify(MultipleMeaningsFinderOutputSchema.shape)}
 
 export async function multipleMeaningsFinder(input: MultipleMeaningsFinderInput): Promise<MultipleMeaningsFinderOutput> {
   const requestBody = {
-    model: 'google/gemini-flash-1.5',
+    model: 'google/gemini-2.0-flash-lite-001',
     messages: [
       {
         role: 'user',
