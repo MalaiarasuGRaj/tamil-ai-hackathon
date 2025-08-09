@@ -28,11 +28,21 @@ const ForeignWordReplacementOutputSchema = z.object({
 });
 export type ForeignWordReplacementOutput = z.infer<typeof ForeignWordReplacementOutputSchema>;
 
-const prompt = `You are a meticulous expert in the Tamil language, specializing in identifying and replacing foreign words within Tamil text.
+const prompt = `You are an extremely meticulous expert in the Tamil language, specializing in identifying and replacing foreign words within Tamil text. Your task is to be uncompromisingly thorough.
 
-You will be given a paragraph that may contain foreign words (primarily from English). Your task is to identify ALL of these foreign words, suggest appropriate formal Tamil replacements, and return the original text with the foreign words highlighted.
+You will be given a paragraph that may contain foreign words (primarily from English). Your task is to identify ALL of these foreign words, including nouns, verbs, and adjectives. Suggest appropriate formal Tamil replacements for each one.
 
-Be thorough. Identify all foreign words, even if they have Tamil suffixes (e.g., in "laptop-ஐ", the foreign word is "laptop").
+You MUST identify foreign words even if they have Tamil suffixes. For example, in "laptop-ஐ", the foreign word is "laptop". In "charge செய்தேன்", the foreign word is "charge". Be very careful about verbs.
+
+Here is an example of how you should process a sentence:
+Input: "நான் phone-ஐ switch on செய்தேன்."
+Correct Output:
+- Highlighted Text: "நான் **phone**-ஐ **switch on** செய்தேன்."
+- Replacement Options:
+  - { originalWord: "phone", suggestedReplacement: "தொலைப்பேசி" }
+  - { originalWord: "switch on", suggestedReplacement: "இயக்கினேன்" }
+
+Now, process the following paragraph with the same level of extreme rigor.
 
 Paragraph:
 {paragraph}
