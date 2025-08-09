@@ -44,11 +44,32 @@ export default function ForeignWordReplacementPage() {
   const finalParagraph = useMemo(() => {
     if (!result || !paragraph) return '';
     let updated = paragraph;
-    result.replacementOptions.forEach((opt) => {
+    
+    // Sort options by length of originalWord descending to replace longer phrases first
+    const sortedOptions = [...result.replacementOptions].sort((a, b) => b.originalWord.length - a.originalWord.length);
+
+    sortedOptions.forEach((opt) => {
       const choice = choices[opt.originalWord];
       if (choice) {
-          const regex = new RegExp(`\\b${opt.originalWord}\\b`, 'gi');
-          updated = updated.replace(regex, opt.suggestedReplacement);
+          // This more complex regex attempts to replace the foreign word and any immediately following Tamil helper verb
+          // It looks for the original word, possibly followed by a Tamil helper verb like செய்து or செய்தேன்
+          const tamilVerbs = ['செய்து', 'செய்தேன்', 'செய்', 'செய்ய'];
+          let replaced = false;
+
+          // Attempt to replace phrase first
+          for (const verb of tamilVerbs) {
+            const phraseToReplace = `${opt.originalWord} ${verb}`;
+            if (updated.includes(phraseToReplace)) {
+                updated = updated.replace(new RegExp(phraseToReplace, 'gi'), opt.suggestedReplacement);
+                replaced = true;
+                break;
+            }
+          }
+
+          // If no phrase was replaced, replace the word itself.
+          if (!replaced) {
+             updated = updated.replace(new RegExp(`\\b${opt.originalWord}\\b`, 'gi'), opt.suggestedReplacement);
+          }
       }
     });
     return updated;
