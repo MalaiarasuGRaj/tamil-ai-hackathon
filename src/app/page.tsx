@@ -77,7 +77,7 @@ export default function Home() {
         <DialogContent className="max-w-md w-full bg-background text-foreground p-6 rounded-lg shadow-2xl">
           <DialogHeader>
             <DialogTitle className="font-headline text-2xl text-primary text-center mb-4">
-              அன்றைய திருக்குறள்
+              இன்றைய திருக்குறள்
             </DialogTitle>
           </DialogHeader>
           {kural && (
