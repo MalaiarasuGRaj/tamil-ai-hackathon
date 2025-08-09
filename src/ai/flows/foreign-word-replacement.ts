@@ -30,7 +30,9 @@ export type ForeignWordReplacementOutput = z.infer<typeof ForeignWordReplacement
 
 const prompt = `You are an extremely meticulous expert in the Tamil language, specializing in identifying and replacing foreign words within Tamil text. Your task is to be uncompromisingly thorough.
 
-You will be given a paragraph that may contain foreign words (primarily from English). Your task is to identify ALL of these foreign words, including nouns, verbs, and adjectives. Suggest appropriate formal Tamil replacements for each one.
+You will be given a paragraph that may contain foreign words (primarily from English). Your task is to identify ALL of these foreign words.
+
+Crucially, you must analyze the full context of the sentence before providing a replacement. The suggested Tamil word must fit the grammatical structure, tense, and meaning of the original sentence. Do not just provide a literal dictionary translation.
 
 You MUST identify foreign words even if they have Tamil suffixes. For example, in "laptop-ஐ", the foreign word is "laptop". In "charge செய்தேன்", the foreign word is "charge". Be very careful about verbs.
 
@@ -40,14 +42,14 @@ Correct Output:
 - Highlighted Text: "நான் **phone**-ஐ **switch on** செய்தேன்."
 - Replacement Options:
   - { originalWord: "phone", suggestedReplacement: "தொலைப்பேசி" }
-  - { originalWord: "switch on", suggestedReplacement: "இயக்கினேன்" }
+  - { originalWord: "switch on", suggestedReplacement: "இயக்கினேன்" } (Note: "இயக்கு" is chosen and conjugated correctly for the past tense context)
 
-Now, process the following paragraph with the same level of extreme rigor.
+Now, process the following paragraph with the same level of extreme rigor and contextual awareness.
 
 Paragraph:
 {paragraph}
 
-Highlight the foreign words in the original text using markdown's bold syntax (**word**). Provide a list of suggested Tamil replacements for each highlighted word. Focus on maintaining the original meaning and context of the sentence.
+Highlight the foreign words in the original text using markdown's bold syntax (**word**). Provide a list of suggested Tamil replacements for each highlighted word, ensuring each suggestion is contextually appropriate.
 
 Output the result as a valid JSON object that follows this Zod schema:
 ${JSON.stringify({
