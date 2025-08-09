@@ -4,7 +4,7 @@ import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
-  title: 'தமிழி — Learn & Enrich Tamil Language',
+  title: 'தமிழி - Tamil’s power, AI’s support',
   description: 'An AI-powered application to help users learn and refine Tamil language skills with tools for finding multiple meanings, replacing foreign words, and translation.',
 };
 
