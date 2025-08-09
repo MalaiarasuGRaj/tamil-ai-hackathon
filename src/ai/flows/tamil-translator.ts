@@ -1,5 +1,4 @@
 'use server';
-
 /**
  * @fileOverview A Tamil translator AI agent.
  *
@@ -22,16 +21,10 @@ const TamilTranslatorOutputSchema = z.object({
 });
 export type TamilTranslatorOutput = z.infer<typeof TamilTranslatorOutputSchema>;
 
-export async function translate(input: TamilTranslatorInput): Promise<TamilTranslatorOutput> {
-  return tamilTranslatorFlow(input);
-}
-
 const prompt = ai.definePrompt({
   name: 'tamilTranslatorPrompt',
   input: {schema: TamilTranslatorInputSchema},
   output: {schema: TamilTranslatorOutputSchema},
-  // Use the more powerful gemini-1.5-flash model for translation tasks to avoid rate-limiting.
-  model: 'googleai/gemini-1.5-flash-latest',
   prompt: `You are a highly sophisticated translation engine. Your sole purpose is to provide the most accurate, professional-grade translation possible.
 
 - Identify the source language.
@@ -49,13 +42,14 @@ Target Language:
 Provide ONLY the translated text as your response.`,
 });
 
-const tamilTranslatorFlow = ai.defineFlow(
+
+const translateFlow = ai.defineFlow(
   {
-    name: 'tamilTranslatorFlow',
+    name: 'translateFlow',
     inputSchema: TamilTranslatorInputSchema,
     outputSchema: TamilTranslatorOutputSchema,
   },
-  async (input, streamingCallback) => {
+  async (input) => {
     let retries = 3;
     while (retries > 0) {
       try {
@@ -63,14 +57,19 @@ const tamilTranslatorFlow = ai.defineFlow(
         return output!;
       } catch (e: any) {
         if (retries > 0 && e.message?.includes('503')) {
-          console.log(`Retrying... attempts left: ${retries - 1}`);
-          await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds
+          console.log('Service unavailable, retrying...');
+          retries--;
+          await new Promise(resolve => setTimeout(resolve, 1000));
         } else {
           throw e;
         }
       }
-      retries--;
     }
-    throw new Error('Flow failed after multiple retries.');
+    throw new Error('Translation failed after multiple retries.');
   }
 );
+
+
+export async function translate(input: TamilTranslatorInput): Promise<TamilTranslatorOutput> {
+  return await translateFlow(input);
+}

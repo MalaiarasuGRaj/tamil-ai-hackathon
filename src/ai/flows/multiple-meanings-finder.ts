@@ -1,5 +1,4 @@
 'use server';
-
 /**
  * @fileOverview A flow that identifies words with multiple meanings in a Tamil paragraph.
  *
@@ -35,11 +34,7 @@ const MultipleMeaningsFinderOutputSchema = z.object({
 });
 export type MultipleMeaningsFinderOutput = z.infer<typeof MultipleMeaningsFinderOutputSchema>;
 
-export async function multipleMeaningsFinder(input: MultipleMeaningsFinderInput): Promise<MultipleMeaningsFinderOutput> {
-  return multipleMeaningsFinderFlow(input);
-}
-
-const multipleMeaningsFinderPrompt = ai.definePrompt({
+const prompt = ai.definePrompt({
   name: 'multipleMeaningsFinderPrompt',
   input: {schema: MultipleMeaningsFinderInputSchema},
   output: {schema: MultipleMeaningsFinderOutputSchema},
@@ -48,46 +43,20 @@ const multipleMeaningsFinderPrompt = ai.definePrompt({
 Paragraph:
 {{{paragraph}}}
 
-Output format:
-{
-  "highlightedParagraph": "Original paragraph with ambiguous words highlighted.",
-  "ambiguousWords": [
-    {
-      "word": "ambiguous word",
-      "meanings": [
-        {
-          "meaning": "meaning of the word",
-          "confidence": confidence score (0-1),
-          "exampleSentence": "An example sentence in Tamil"
-        }
-      ]
-    }
-  ]
+Highlight the ambiguous words in the original paragraph using markdown's bold syntax (**word**).
 `,
 });
 
-const multipleMeaningsFinderFlow = ai.defineFlow(
-  {
-    name: 'multipleMeaningsFinderFlow',
-    inputSchema: MultipleMeaningsFinderInputSchema,
-    outputSchema: MultipleMeaningsFinderOutputSchema,
-  },
-  async (input, streamingCallback) => {
-    let retries = 3;
-    while (retries > 0) {
-      try {
-        const {output} = await multipleMeaningsFinderPrompt(input);
-        return output!;
-      } catch (e: any) {
-        if (retries > 0 && e.message?.includes('503')) {
-          console.log(`Retrying... attempts left: ${retries - 1}`);
-          await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds
-        } else {
-          throw e;
-        }
-      }
-      retries--;
-    }
-    throw new Error('Flow failed after multiple retries.');
-  }
-);
+const multipleMeaningsFinderFlow = ai.defineFlow({
+  name: 'multipleMeaningsFinderFlow',
+  inputSchema: MultipleMeaningsFinderInputSchema,
+  outputSchema: MultipleMeaningsFinderOutputSchema,
+}, async (input) => {
+  const {output} = await prompt(input);
+  return output!;
+});
+
+
+export async function multipleMeaningsFinder(input: MultipleMeaningsFinderInput): Promise<MultipleMeaningsFinderOutput> {
+  return await multipleMeaningsFinderFlow(input);
+}
