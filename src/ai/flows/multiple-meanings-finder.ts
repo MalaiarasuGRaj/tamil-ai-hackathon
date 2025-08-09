@@ -17,7 +17,7 @@ export type MultipleMeaningsFinderInput = z.infer<typeof MultipleMeaningsFinderI
 const MeaningSchema = z.object({
   meaning: z.string().describe('The meaning of the word.'),
   confidence: z.number().describe('The confidence score (0-1) for this meaning.'),
-  exampleSentence: z.string().describe('An example sentence in Tamil using this meaning.'),
+  exampleSentence: z.string().describe('An example sentence in Tamil using this meaning.').optional(),
 });
 
 const AmbiguousWordSchema = z.object({

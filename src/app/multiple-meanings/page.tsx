@@ -148,7 +148,9 @@ export default function MultipleMeaningsPage() {
                                 <p className="text-sm text-muted-foreground">நம்பகத்தன்மை: {Math.round(meaning.confidence * 100)}%</p>
                                 <Progress value={meaning.confidence * 100} className="w-1/2 h-2" />
                               </div>
-                              <p className="text-sm italic text-muted-foreground">"{meaning.exampleSentence}"</p>
+                              {meaning.exampleSentence && (
+                                <p className="text-sm italic text-muted-foreground">"{meaning.exampleSentence}"</p>
+                              )}
                             </CardContent>
                           </Card>
                         ))}
