@@ -1,8 +1,26 @@
+'use client';
+
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { BookOpenCheck, Replace, Languages } from 'lucide-react';
+import { BookOpenCheck, Replace, Languages, ScrollText } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from '@/components/ui/dialog';
+import { useState, useEffect } from 'react';
+import { X } from 'lucide-react';
+
+interface KuralData {
+  number: string;
+  line1: string;
+  line2: string;
+  meaning: string;
+}
 
 export default function Home() {
+  const [kural, setKural] = useState<KuralData | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const tools = [
     {
       title: 'பல பொருள் கண்டறி',
@@ -23,6 +41,25 @@ export default function Home() {
       icon: <Languages className="h-12 w-12 text-primary" />,
     },
   ];
+
+  const fetchKural = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch('/api/kural');
+      if (!response.ok) {
+        throw new Error('Failed to fetch kural');
+      }
+      const data: KuralData = await response.json();
+      setKural(data);
+      setIsDialogOpen(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      setIsDialogOpen(true); // Open dialog to show error
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <main className="container mx-auto flex min-h-screen flex-col items-center justify-start pt-24 p-4">
@@ -46,6 +83,52 @@ export default function Home() {
           </Link>
         ))}
       </div>
+
+      <Button
+        variant="default"
+        size="icon"
+        className="fixed bottom-8 right-8 h-16 w-16 rounded-full shadow-lg bg-card text-primary hover:bg-primary/90 hover:text-card"
+        onClick={fetchKural}
+        disabled={isLoading}
+      >
+        <ScrollText className="h-8 w-8" />
+        <span className="sr-only">Thirukkural of the Day</span>
+      </Button>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-w-md w-full bg-background text-foreground p-6 rounded-lg shadow-2xl">
+          <DialogHeader>
+            <DialogTitle className="font-headline text-2xl text-primary text-center mb-4">
+              {error ? 'பிழை' : 'அன்றைய திருக்குறள்'}
+            </DialogTitle>
+          </DialogHeader>
+          {isLoading ? (
+            <div className="text-center">
+              <p>ஏற்றுகிறது...</p>
+            </div>
+          ) : error ? (
+            <DialogDescription className="text-center text-destructive">
+              திருக்குறளைப் பெற முடியவில்லை. மீண்டும் முயற்சிக்கவும்.
+            </DialogDescription>
+          ) : kural ? (
+            <div className="text-center space-y-4">
+              <p className="font-bold text-lg text-accent">{kural.number}</p>
+              <div>
+                <p className="text-lg leading-relaxed">{kural.line1}</p>
+                <p className="text-lg leading-relaxed">{kural.line2}</p>
+              </div>
+              <div>
+                <p className="font-bold text-primary mb-2">பொருள்:</p>
+                <p className="text-muted-foreground">{kural.meaning}</p>
+              </div>
+            </div>
+          ) : null}
+           <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close</span>
+           </DialogClose>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }
