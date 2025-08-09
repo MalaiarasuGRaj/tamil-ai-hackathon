@@ -1,11 +1,12 @@
 import {genkit} from 'genkit';
-import {openrouter} from 'genkitx-openrouter';
+import {googleAI} from '@genkit-ai/googleai';
 
 export const ai = genkit({
   plugins: [
-    openrouter({
-      apiKey: process.env.OPENROUTER_API_KEY || '',
+    googleAI({
+      apiKey: process.env.GEMINI_API_KEY || '',
     }),
   ],
-  model: 'google/gemini-flash-1.5',
+  logLevel: 'debug',
+  enableTracingAndMetrics: true,
 });

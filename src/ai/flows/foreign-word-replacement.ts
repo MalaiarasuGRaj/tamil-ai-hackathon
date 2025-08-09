@@ -10,7 +10,6 @@
  * @exports ForeignWordReplacementOutput - The return type for the foreignWordReplacement function.
  */
 
-import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const ForeignWordReplacementInputSchema = z.object({
@@ -29,32 +28,45 @@ const ForeignWordReplacementOutputSchema = z.object({
 });
 export type ForeignWordReplacementOutput = z.infer<typeof ForeignWordReplacementOutputSchema>;
 
-const prompt = ai.definePrompt({
-  name: 'foreignWordReplacementPrompt',
-  input: {schema: ForeignWordReplacementInputSchema},
-  output: {schema: ForeignWordReplacementOutputSchema},
-  prompt: `You are an expert in the Tamil language.
+const prompt = `You are an expert in the Tamil language.
 
 You will be given a paragraph that may contain foreign words. Your task is to identify these words, suggest appropriate formal Tamil replacements, and return the original text with the foreign words highlighted and a list of replacement options.
 
-Paragraph: {{{paragraph}}}
+Paragraph: {paragraph}
 
-Highlight the foreign words in the original text using markdown's bold syntax (**word**). Provide a list of suggested Tamil replacements for each highlighted word. Focus on maintaining the original meaning and context of the sentence.`,
-});
+Highlight the foreign words in the original text using markdown's bold syntax (**word**). Provide a list of suggested Tamil replacements for each highlighted word. Focus on maintaining the original meaning and context of the sentence.
 
-const foreignWordReplacementFlow = ai.defineFlow(
-  {
-    name: 'foreignWordReplacementFlow',
-    inputSchema: ForeignWordReplacementInputSchema,
-    outputSchema: ForeignWordReplacementOutputSchema,
-  },
-  async (input) => {
-    const {output} = await prompt(input);
-    return output!;
-  }
-);
-
+Output the result as a valid JSON object that follows this Zod schema:
+${JSON.stringify(ForeignWordReplacementOutputSchema.shape)}
+`;
 
 export async function foreignWordReplacement(input: ForeignWordReplacementInput): Promise<ForeignWordReplacementOutput> {
-  return await foreignWordReplacementFlow(input);
+  const requestBody = {
+    model: 'google/gemini-flash-1.5',
+    messages: [
+      {
+        role: 'user',
+        content: prompt.replace('{paragraph}', input.paragraph),
+      },
+    ],
+    response_format: { type: 'json_object' },
+  };
+
+  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+    },
+    body: JSON.stringify(requestBody),
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.text();
+    throw new Error(`API request failed with status ${response.status}: ${errorBody}`);
+  }
+
+  const data = await response.json();
+  const jsonContent = JSON.parse(data.choices[0].message.content);
+  return ForeignWordReplacementOutputSchema.parse(jsonContent);
 }
